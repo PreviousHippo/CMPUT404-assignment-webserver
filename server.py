@@ -1,5 +1,6 @@
 #  coding: utf-8
 import SocketServer
+import os
 
 # Copyright 2013 Abram Hindle, Eddie Antonio Santos
 #
@@ -27,49 +28,32 @@ import SocketServer
 # try: curl -v -X GET http://127.0.0.1:8080/
 
 
+
 class MyWebServer(SocketServer.BaseRequestHandler):
 
     def handle(self):
         self.data = self.request.recv(1024).strip()
         print ("Got a request of: %s\n" % self.data)
-        self.request.sendall("OK")
-
-        #report the error
-    def error(self,error):
-        return
-
-
-        #give the HTTP1.1 something here include http1.1, content length, type, connection
-        #and content
-    def response_answer(self):
-        return
-
-
-        #find the web but the address had to be redirected
-        #i.e 302 or 301, dont remember
-    def redirect(self):
-        return
-
-
-        #have no idea what it is, need to ask tmr
-    def abs_path(self):
-        return
-
-        #get the method
-    def get_things(self):
-        return
-
-
-        #check the header part, which includes request method, root and protocal
-    def head_checker(self):
-        return
-
-
-        #make the request for the web?
-        #dont understand, for temp use
-    def request(self):
-        return
-
+        #self.request.sendall("OK")
+        request = self.data.split()
+        root = request[1]
+        protocal = request[2]
+        rootPath = os.path.abspath("www")
+        #print root
+        #print request
+        abs_path = ""
+        if request.startswith('/../'):
+            self.request.sendall("HTTP/1.1 404 Not Found\r\n\r\n")
+            self.request.sendall("404 - Not Found!")
+        elif request[-1] == "/":
+            abs_path = rootPath +"/index.html"
+        elif:
+            abs_path = rootPath + root
+        elif requestMethod == "GET":
+            self.getMethod(abs_path,protocal)
+        elif:
+            self.request.sendall("HTTP/1.1 404 Not Found\r\n\r\n")
+            self.request.sendall("404 - Not Found")
 
 
 if __name__ == "__main__":
