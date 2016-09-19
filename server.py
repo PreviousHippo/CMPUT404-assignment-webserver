@@ -33,20 +33,15 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         self.data = self.request.recv(1024).strip()
         print ("Got a request of: %s\n" % self.data)
         MyRequest = self.data.split()
-        #print
         method = MyRequest[0]
         root = MyRequest[1]
         protocol = MyRequest[2]
-        #print MyRequest
-        #print root
         #get the absolute path from the root
         RootAbspath = os.path.abspath("www")
-
         #not access to the parent directory of root directory
         if root.startswith("/.."):
             self.ErrorMsg(protocol)
-
-        #get the absolute path from the root
+        #the normal stituation
         else:
             if root[-1] == "/":
                 abs_path = RootAbspath + root + "/index.html"
@@ -55,13 +50,14 @@ class MyWebServer(SocketServer.BaseRequestHandler):
             if method.upper() == "GET":
                 self.Get(abs_path,protocol)
 
-
+    #display 404 warning message
     def ErrorMsg(self,protocol):
         Message = "HTTP/1.1 404 Not found\r\n\r\n"
         Message +="404 Not Found"
         self.request.sendall(Message)
 
 
+    #GET method
     def Get(self,abs_path,protocol):
         try:
             FILE = open(abs_path, 'r')
@@ -73,10 +69,11 @@ class MyWebServer(SocketServer.BaseRequestHandler):
             elif abs_path.lower().endswith(".css"):
                 mime = "text/css"
 
+
             Response = str(protocol)+" 200 OK\r\n"
-            Response += "Content-Type: " + str(mime)+"\r\n"
+            Response += "Content-Type: " + str(mime) +"\r\n"
             Response += "Content-Length: " + str(len(body)) +"\r\n"
-            Response += "Connection: close" + "\r\n\r\n"
+            Response += "Connection: close\r\n\r\n"
             Response += body + "\r\n"
             self.request.sendall(Response)
             FILE.close()
