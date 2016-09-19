@@ -32,6 +32,36 @@ class MyWebServer(SocketServer.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(1024).strip()
         print ("Got a request of: %s\n" % self.data)
+
+    def checkHeader(self,request):
+        MyRequest = self.data.split()
+        method = MyRequest[0]
+        root = MyRequest[1]
+        protocol = MyRequest[2]
+
+    def header_analysis(self, req):
+        req_method, req_root, req_protocol = self.checkHeader(req)
+        RootAbspath = os.path.abspath("www")
+
+        #not access to the parent directory of root directory
+        if root.startswith("/.."):
+            self.ErrorMsg(protocol)
+
+        #get the absolute path from the root
+        else:
+            if root[-1] == "/":
+                abs_path = RootAbspath + root + "/index.html"
+            else:
+                abs_path = RootAbspath + root
+            if method.upper() == "GET":
+                self.Get(abs_path,protocol)
+
+
+
+
+
+
+        """
         MyRequest = self.data.split()
         #print
         method = MyRequest[0]
@@ -54,6 +84,7 @@ class MyWebServer(SocketServer.BaseRequestHandler):
                 abs_path = RootAbspath + root
             if method.upper() == "GET":
                 self.Get(abs_path,protocol)
+                """
 
 
     def ErrorMsg(self,protocol):
