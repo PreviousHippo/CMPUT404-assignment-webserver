@@ -32,8 +32,9 @@ class MyWebServer(SocketServer.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(1024).strip()
         print ("Got a request of: %s\n" % self.data)
+        #get the header, header should include 3 parts we need, method, root(path)
+        # and protocol number
         MyRequest = self.data.split()
-        #by print MyRequest to get the method, root and protocol position
         method = MyRequest[0]
         root = MyRequest[1]
         protocol = MyRequest[2]
@@ -57,13 +58,20 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         Message +="404 Not Found"
         self.request.sendall(Message)
 
+    #display 200 passing message
+    def PassingMsg(self,protocol,mime,body):
+        Response = str(protocol)+" 200 OK\r\n"
+        Response += "Content-Type: " + str(mime) +"\r\n"
+        Response += "Content-Length: " + str(len(body)) +"\r\n"
+        Response += "Connection: close\r\n\r\n"
+        Response += body + "\r\n"
+        self.request.sendall(Response)
 
     #GET method
     def Get(self,abs_path,protocol):
         try:
             FILE = open(abs_path, 'r')
             body = FILE.read()
-
             #get the mimetypes
             if abs_path.lower().endswith(".html"):
                 mime = "text/html"
@@ -71,16 +79,12 @@ class MyWebServer(SocketServer.BaseRequestHandler):
                 mime = "text/css"
 
             #display the 200 message
-            Response = str(protocol)+" 200 OK\r\n"
-            Response += "Content-Type: " + str(mime) +"\r\n"
-            Response += "Content-Length: " + str(len(body)) +"\r\n"
-            Response += "Connection: close\r\n\r\n"
-            Response += body + "\r\n"
-            self.request.sendall(Response)
+            self.PassingMsg(protocol,mime,body)
+            #finish, FILE close
             FILE.close()
 
-        # if the absolute path is not exist, throw the 404 error
         except:
+            #display 404 warning message
             self.ErrorMsg(protocol)
 
 
