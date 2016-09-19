@@ -16,9 +16,15 @@ server.py contains contributions from:
 
 * Abram Hindle
 * Eddie Antonio Santos
+* Tianyu Hu
 
 But the server.py example is derived from the python documentation
 examples thus some of the code is Copyright © 2001-2013 Python
 Software Foundation; All Rights Reserved under the PSF license (GPL
 compatible) http://docs.python.org/2/library/socketserver.html
 
+Reference:
+https://www.tutorialspoint.com/python/string_startswith.htm
+https://www.tutorialspoint.com/python/string_endswith.htm
+http://stackoverflow.com/questions/2709821/what-is-the-purpose-of-self-in-python
+https://docs.python.org/2/library/socket.html
