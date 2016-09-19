@@ -33,6 +33,7 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         self.data = self.request.recv(1024).strip()
         print ("Got a request of: %s\n" % self.data)
         MyRequest = self.data.split()
+        #by print MyRequest to get the method, root and protocol position
         method = MyRequest[0]
         root = MyRequest[1]
         protocol = MyRequest[2]
@@ -63,13 +64,13 @@ class MyWebServer(SocketServer.BaseRequestHandler):
             FILE = open(abs_path, 'r')
             body = FILE.read()
 
+            #get the mimetypes
             if abs_path.lower().endswith(".html"):
                 mime = "text/html"
-
             elif abs_path.lower().endswith(".css"):
                 mime = "text/css"
 
-
+            #display the 200 message
             Response = str(protocol)+" 200 OK\r\n"
             Response += "Content-Type: " + str(mime) +"\r\n"
             Response += "Content-Length: " + str(len(body)) +"\r\n"
